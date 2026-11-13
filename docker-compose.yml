@@ -1,0 +1,26 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/data:/app/backend/data
+    environment:
+      - TLE_CACHE_TTL_SECONDS=7200
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: frontend
+      args:
+        PUBLIC_API_URL: http://localhost:8000
+    ports:
+      - "3000:3000"
+    environment:
+      - PUBLIC_API_URL=http://localhost:8000
+    depends_on:
+      - backend
