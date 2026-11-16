@@ -10,7 +10,7 @@ CelesTrak OMM ──httpx──► ingestion (SWR) ──► Redis
                          ticker (1–2 Hz) ◄────┤
                               │               │
                          PUBLISH frames:* ────┤
-                                              ▼
+                                              ▼s
                          FastAPI hub ──WebSocket──► SvelteKit
                               │                      │
                          ProcessPool            SceneController
