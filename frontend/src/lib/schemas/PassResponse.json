@@ -1,0 +1,156 @@
+{
+  "$defs": {
+    "PassCurvePoint": {
+      "properties": {
+        "timestamp": {
+          "title": "Timestamp",
+          "type": "string"
+        },
+        "azimuth_deg": {
+          "title": "Azimuth Deg",
+          "type": "number"
+        },
+        "elevation_deg": {
+          "title": "Elevation Deg",
+          "type": "number"
+        },
+        "elevation_apparent_deg": {
+          "title": "Elevation Apparent Deg",
+          "type": "number"
+        },
+        "slant_range_km": {
+          "title": "Slant Range Km",
+          "type": "number"
+        },
+        "range_rate_km_s": {
+          "title": "Range Rate Km S",
+          "type": "number"
+        },
+        "doppler_hz": {
+          "title": "Doppler Hz",
+          "type": "number"
+        },
+        "doppler_drift_hz_s": {
+          "title": "Doppler Drift Hz S",
+          "type": "number"
+        },
+        "fspl_db": {
+          "title": "Fspl Db",
+          "type": "number"
+        },
+        "rx_freq_hz": {
+          "title": "Rx Freq Hz",
+          "type": "number"
+        }
+      },
+      "required": [
+        "timestamp",
+        "azimuth_deg",
+        "elevation_deg",
+        "elevation_apparent_deg",
+        "slant_range_km",
+        "range_rate_km_s",
+        "doppler_hz",
+        "doppler_drift_hz_s",
+        "fspl_db",
+        "rx_freq_hz"
+      ],
+      "title": "PassCurvePoint",
+      "type": "object"
+    },
+    "PassEvent": {
+      "properties": {
+        "aos": {
+          "title": "Aos",
+          "type": "string"
+        },
+        "tca": {
+          "title": "Tca",
+          "type": "string"
+        },
+        "los": {
+          "title": "Los",
+          "type": "string"
+        },
+        "max_elevation_deg": {
+          "title": "Max Elevation Deg",
+          "type": "number"
+        },
+        "aos_azimuth_deg": {
+          "title": "Aos Azimuth Deg",
+          "type": "number"
+        },
+        "los_azimuth_deg": {
+          "title": "Los Azimuth Deg",
+          "type": "number"
+        },
+        "tca_azimuth_deg": {
+          "title": "Tca Azimuth Deg",
+          "type": "number"
+        },
+        "max_doppler_hz": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Doppler Hz"
+        },
+        "min_fspl_db": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Min Fspl Db"
+        }
+      },
+      "required": [
+        "aos",
+        "tca",
+        "los",
+        "max_elevation_deg",
+        "aos_azimuth_deg",
+        "los_azimuth_deg",
+        "tca_azimuth_deg"
+      ],
+      "title": "PassEvent",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "norad_id": {
+      "title": "Norad Id",
+      "type": "integer"
+    },
+    "passes": {
+      "items": {
+        "$ref": "#/$defs/PassEvent"
+      },
+      "title": "Passes",
+      "type": "array"
+    },
+    "next_pass_curve": {
+      "items": {
+        "$ref": "#/$defs/PassCurvePoint"
+      },
+      "title": "Next Pass Curve",
+      "type": "array"
+    }
+  },
+  "required": [
+    "norad_id",
+    "passes",
+    "next_pass_curve"
+  ],
+  "title": "PassResponse",
+  "type": "object"
+}

@@ -1,0 +1,134 @@
+{
+  "$defs": {
+    "TrackPoint": {
+      "properties": {
+        "timestamp": {
+          "title": "Timestamp",
+          "type": "string"
+        },
+        "latitude_deg": {
+          "title": "Latitude Deg",
+          "type": "number"
+        },
+        "longitude_deg": {
+          "title": "Longitude Deg",
+          "type": "number"
+        },
+        "altitude_km": {
+          "title": "Altitude Km",
+          "type": "number"
+        },
+        "r_itrs_km": {
+          "anyOf": [
+            {
+              "maxItems": 3,
+              "minItems": 3,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "R Itrs Km"
+        },
+        "v_itrs_km_s": {
+          "anyOf": [
+            {
+              "maxItems": 3,
+              "minItems": 3,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "V Itrs Km S"
+        }
+      },
+      "required": [
+        "timestamp",
+        "latitude_deg",
+        "longitude_deg",
+        "altitude_km"
+      ],
+      "title": "TrackPoint",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "norad_id": {
+      "title": "Norad Id",
+      "type": "integer"
+    },
+    "name": {
+      "title": "Name",
+      "type": "string"
+    },
+    "footprint_radius_km": {
+      "title": "Footprint Radius Km",
+      "type": "number"
+    },
+    "past_track": {
+      "items": {
+        "$ref": "#/$defs/TrackPoint"
+      },
+      "title": "Past Track",
+      "type": "array"
+    },
+    "future_track": {
+      "items": {
+        "$ref": "#/$defs/TrackPoint"
+      },
+      "title": "Future Track",
+      "type": "array"
+    },
+    "epoch_iso": {
+      "title": "Epoch Iso",
+      "type": "string"
+    },
+    "epoch_age_h": {
+      "title": "Epoch Age H",
+      "type": "number"
+    },
+    "stale_warning": {
+      "title": "Stale Warning",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "norad_id",
+    "name",
+    "footprint_radius_km",
+    "past_track",
+    "future_track",
+    "epoch_iso",
+    "epoch_age_h",
+    "stale_warning"
+  ],
+  "title": "SatelliteTrackResponse",
+  "type": "object"
+}

@@ -1,0 +1,91 @@
+{
+  "$defs": {
+    "AttitudeSample": {
+      "properties": {
+        "t_s": {
+          "description": "Simulation time [s]",
+          "title": "T S",
+          "type": "number"
+        },
+        "q_body_inertial": {
+          "description": "Quaternion (w,x,y,z) body\u2190inertial [-]",
+          "maxItems": 4,
+          "minItems": 4,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Q Body Inertial",
+          "type": "array"
+        },
+        "omega_body_rad_s": {
+          "description": "Body rates [rad/s]",
+          "maxItems": 3,
+          "minItems": 3,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Omega Body Rad S",
+          "type": "array"
+        },
+        "solar_power_w": {
+          "description": "Instantaneous array power [W]",
+          "title": "Solar Power W",
+          "type": "number"
+        },
+        "polarization_loss_db": {
+          "description": "Polarization mismatch loss [dB]",
+          "title": "Polarization Loss Db",
+          "type": "number"
+        }
+      },
+      "required": [
+        "t_s",
+        "q_body_inertial",
+        "omega_body_rad_s",
+        "solar_power_w",
+        "polarization_loss_db"
+      ],
+      "title": "AttitudeSample",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "samples": {
+      "items": {
+        "$ref": "#/$defs/AttitudeSample"
+      },
+      "title": "Samples",
+      "type": "array"
+    },
+    "conserved_angular_momentum_err": {
+      "description": "Relative |H| drift over integration [-]",
+      "title": "Conserved Angular Momentum Err",
+      "type": "number"
+    }
+  },
+  "required": [
+    "samples",
+    "conserved_angular_momentum_err"
+  ],
+  "title": "AttitudeSimResponse",
+  "type": "object"
+}

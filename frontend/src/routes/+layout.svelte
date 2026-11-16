@@ -9,8 +9,8 @@
 		class="border-b border-mission-border bg-mission-panel/80 backdrop-blur px-4 py-3 flex items-center justify-between"
 	>
 		<div>
-			<h1 class="text-lg font-semibold tracking-tight text-slate-100">GP Visualiser</h1>
-			<p class="text-xs text-mission-muted font-mono">LEO telemetry · SGP4 · pass predictor</p>
+			<h1 class="text-lg font-semibold tracking-tight text-slate-100">LEO Telemetry & RF Pass Predictor</h1>
+			<p class="text-xs text-mission-muted font-mono">SGP4 · Redis ticker · Hermite · link budget</p>
 		</div>
 		<span class="text-[10px] uppercase tracking-[0.2em] text-mission-cyan font-mono">Mission Control</span>
 	</header>

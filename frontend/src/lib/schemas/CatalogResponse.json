@@ -1,0 +1,90 @@
+{
+  "$defs": {
+    "CatalogItem": {
+      "properties": {
+        "norad_id": {
+          "title": "Norad Id",
+          "type": "integer"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "epoch_iso": {
+          "title": "Epoch Iso",
+          "type": "string"
+        },
+        "epoch_age_h": {
+          "title": "Epoch Age H",
+          "type": "number"
+        },
+        "stale_warning": {
+          "title": "Stale Warning",
+          "type": "boolean"
+        },
+        "bstar": {
+          "description": "B* [1/earth radii]",
+          "title": "Bstar",
+          "type": "number"
+        },
+        "bstar_trend": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Linear fit slope of B* vs epoch [1/earth radii / day]",
+          "title": "Bstar Trend"
+        },
+        "inclination_deg": {
+          "title": "Inclination Deg",
+          "type": "number"
+        },
+        "eccentricity": {
+          "title": "Eccentricity",
+          "type": "number"
+        },
+        "mean_motion_rev_per_day": {
+          "title": "Mean Motion Rev Per Day",
+          "type": "number"
+        }
+      },
+      "required": [
+        "norad_id",
+        "name",
+        "epoch_iso",
+        "epoch_age_h",
+        "stale_warning",
+        "bstar",
+        "inclination_deg",
+        "eccentricity",
+        "mean_motion_rev_per_day"
+      ],
+      "title": "CatalogItem",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "satellites": {
+      "items": {
+        "$ref": "#/$defs/CatalogItem"
+      },
+      "title": "Satellites",
+      "type": "array"
+    },
+    "source": {
+      "default": "celestrak",
+      "title": "Source",
+      "type": "string"
+    }
+  },
+  "required": [
+    "satellites"
+  ],
+  "title": "CatalogResponse",
+  "type": "object"
+}

@@ -1,27 +1,58 @@
-# GP Visualiser — LEO Orbital Telemetry & RF Pass Predictor
+# Real-Time LEO Orbital Telemetry & RF Pass Predictor
 
-Full-stack mission-control style app for **weather LEO** and **ISS** satellites: live CelesTrak GP/TLE ingestion, **SGP4** propagation, TEME→ECEF ground tracks, ground-station pass prediction (Az/El), and **classical Doppler** curves.
+Production-oriented full-stack system for **LEO weather satellites + ISS**: CelesTrak OMM ingestion with Redis stale-while-revalidate caching, vectorized SGP4 (`SatrecArray`), TEME→ITRS transforms with polar motion, relativistic Doppler / FSPL / refraction, eclipse & conjunction screening, CubeSat attitude simulation, and a 60 FPS Three.js visualizer with Hermite dead-reckoning.
+
+## Architecture
+
+```
+CelesTrak OMM ──httpx──► ingestion (SWR) ──► Redis
+                                              │
+                         ticker (1–2 Hz) ◄────┤
+                              │               │
+                         PUBLISH frames:* ────┤
+                                              ▼
+                         FastAPI hub ──WebSocket──► SvelteKit
+                              │                      │
+                         ProcessPool            SceneController
+                         (passes/TCA/…)         + geometry worker
+```
+
+See [docs/adr/](docs/adr/) for Architecture Decision Records and [docs/physics/](docs/physics/) for KaTeX derivations.
 
 ## Stack
 
 | Layer | Tech |
 |-------|------|
-| Backend | Python 3.11+, FastAPI, `sgp4`, NumPy, httpx, Pydantic v2 |
-| Frontend | SvelteKit, Tailwind CSS, Chart.js, HTML5 Canvas map |
-| Deploy | Docker + docker-compose |
+| Backend | Python 3.12, FastAPI, NumPy, SciPy, sgp4, Astropy, Redis, orjson |
+| Ticker | Dedicated process publishing state vectors @ 1–2 Hz |
+| Frontend | SvelteKit 5, Three.js, Chart.js, Web Workers |
+| Deploy | Docker Compose (`redis`, `backend`, `ticker`, `frontend`) |
 
-## Quick start (local)
+## Quick start
 
-### Backend
+### Docker (recommended)
 
 ```bash
+docker compose up --build
+```
+
+- API docs: http://localhost:8000/docs  
+- Health: http://localhost:8000/api/v1/health  
+- UI: http://localhost:3000  
+
+### Local backend
+
+```bash
+# Redis must be running locally
 cd backend
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-PYTHONPATH=. uvicorn main:app --reload --host 0.0.0.0 --port 8000
+PYTHONPATH=. uvicorn app.main:app --reload --port 8000
+# separate terminal:
+PYTHONPATH=. python -m app.streaming.ticker
 ```
 
-### Frontend
+### Local frontend
 
 ```bash
 cd frontend
@@ -29,85 +60,50 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173) — Vite proxies `/api` and `/ws` to port 8000.
+## API (v1)
 
-### Tests
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/api/v1/health` | Redis + ticker heartbeat + IERS status |
+| `GET` | `/api/v1/catalog` | OMM catalog with B* / epoch-age |
+| `GET` | `/api/v1/satellites/{id}/track` | Ground track with ITRS keyframes |
+| `POST` | `/api/v1/passes` | Multi-hour passes + Doppler/FSPL curve |
+| `GET` | `/api/v1/satellites/{id}/eclipses` | Umbra/penumbra events |
+| `GET` | `/api/v1/conjunctions` | TCA screening alerts |
+| `POST` | `/api/v1/attitude/simulate` | Torque-free CubeSat ODE |
+| `WS` | `/ws/v1/telemetry?norad&lat&lon&alt_m&freq_hz` | Live frames |
+
+## Tests & validation
 
 ```bash
 cd backend && source .venv/bin/activate
 PYTHONPATH=. pytest tests/ -q
+# validation suite (astropy/Vallado fidelity):
+PYTHONPATH=. pytest tests/validation -m validation -q
 ```
-
-### Docker
 
 ```bash
-docker compose up --build
+cd frontend && npm test
 ```
 
-- API: [http://localhost:8000/docs](http://localhost:8000/docs)  
-- UI: [http://localhost:3000](http://localhost:3000) (`PUBLIC_API_URL=http://localhost:8000` for browser calls)
+Reproducible notebook:
 
-## API
+```bash
+jupyter nbconvert --to notebook --execute notebooks/validation_report.ipynb
+```
 
-| Method | Path | Description |
-|--------|------|-------------|
-| `GET` | `/api/satellites` | Tracked sats + live sub-satellite point |
-| `GET` | `/api/satellite/{norad_id}/track` | ±15 min / +95 min ground track @ 30 s |
-| `POST` | `/api/passes` | 24 h passes ≥10°, Doppler curve for next pass |
-| `WS` | `/ws/telemetry/{norad_id}?lat&lon&alt_m&freq_mhz` | 1 Hz live telemetry |
-
-## Math reference
-
-### TEME → ECEF
-
-SGP4 outputs position \(\mathbf r_\mathrm{TEME}\). Earth rotation uses GMST \(\theta_\mathrm{GMST}\):
-
-\[
-\mathbf r_\mathrm{ECEF} = R_3(\theta_\mathrm{GMST})\,\mathbf r_\mathrm{TEME}
-\]
-
-\[
-\mathbf v_\mathrm{ECEF} = R_3(\theta_\mathrm{GMST})\,\mathbf v_\mathrm{TEME} + \boldsymbol\omega_\oplus \times \mathbf r_\mathrm{ECEF}
-\]
-
-with \(\boldsymbol\omega_\oplus = [0,0,7.292115\times10^{-5}]^\top\) rad/s.
-
-Geodetic \((\phi,\lambda,h)\) uses WGS-84 iterative latitude on ECEF.
-
-### Topocentric look angles
-
-Observer ECEF \(\mathbf r_\mathrm{obs}\), range \(\boldsymbol\rho = \mathbf r_\mathrm{sat}-\mathbf r_\mathrm{obs}\). Rotate to ENU:
-
-\[
-\begin{bmatrix}e\\n\\u\end{bmatrix} = T(\phi,\lambda)\,\boldsymbol\rho
-\]
-
-\[
-\mathrm{Az} = \mathrm{atan2}(e,n),\quad \mathrm{El} = \mathrm{atan2}\left(u,\sqrt{e^2+n^2}\right)
-\]
-
-### Doppler (range rate)
-
-\[
-\dot\rho = \hat{\boldsymbol\rho}\cdot(\mathbf v_\mathrm{sat}-\mathbf v_\mathrm{obs}),\qquad
-\Delta f = -f_0 \frac{\dot\rho}{c}
-\]
-
-Ground station \(\mathbf v_\mathrm{obs}\approx 0\). Rx frequency \(f_\mathrm{rx} = f_0 + \Delta f\).
-
-## Data sources
-
-- CelesTrak GP TLE: `weather` + `stations` groups (2 h in-memory TTL + `backend/data/tle_fallback.json`).
+**Important:** position errors `< 10 m` assert *implementation fidelity* against reference SGP4/astropy transforms — not absolute orbit determination accuracy (~1 km at TLE epoch).
 
 ## Project layout
 
 ```
-backend/
-  main.py
-  services/{tle_fetcher,propagator,pass_predictor}.py
-  models/schemas.py
-  tests/
-frontend/
-  src/routes/+page.svelte
-  src/lib/components/
+backend/app/{ingestion,propagation,physics,streaming,schemas}/
+frontend/src/lib/{renderer,workers,net,stores,components}/
+docs/{adr,physics}/
+notebooks/validation_report.ipynb
+data/sdr_captures/   # synthetic + hook for real SDR CSVs
 ```
+
+## License / data
+
+CelesTrak GP/OMM elements are used under CelesTrak terms. Synthetic SDR file is labelled and for demo only.

@@ -1,0 +1,1069 @@
+{
+  "TelemetryFrame": {
+    "$defs": {
+      "ObserverGeometry": {
+        "properties": {
+          "azimuth_deg": {
+            "description": "Azimuth from north [deg]",
+            "title": "Azimuth Deg",
+            "type": "number"
+          },
+          "elevation_deg": {
+            "description": "Geometric elevation [deg]",
+            "title": "Elevation Deg",
+            "type": "number"
+          },
+          "elevation_apparent_deg": {
+            "description": "Refraction-corrected elevation [deg]",
+            "title": "Elevation Apparent Deg",
+            "type": "number"
+          },
+          "slant_range_km": {
+            "description": "Slant range [km]",
+            "title": "Slant Range Km",
+            "type": "number"
+          },
+          "range_rate_km_s": {
+            "description": "Range rate [km/s]",
+            "title": "Range Rate Km S",
+            "type": "number"
+          },
+          "doppler_hz": {
+            "description": "Relativistic Doppler shift [Hz]",
+            "title": "Doppler Hz",
+            "type": "number"
+          },
+          "doppler_drift_hz_s": {
+            "description": "Doppler drift rate [Hz/s]",
+            "title": "Doppler Drift Hz S",
+            "type": "number"
+          },
+          "fspl_db": {
+            "description": "Free-space path loss [dB]",
+            "title": "Fspl Db",
+            "type": "number"
+          },
+          "rx_freq_hz": {
+            "description": "Predicted receive frequency [Hz]",
+            "title": "Rx Freq Hz",
+            "type": "number"
+          }
+        },
+        "required": [
+          "azimuth_deg",
+          "elevation_deg",
+          "elevation_apparent_deg",
+          "slant_range_km",
+          "range_rate_km_s",
+          "doppler_hz",
+          "doppler_drift_hz_s",
+          "fspl_db",
+          "rx_freq_hz"
+        ],
+        "title": "ObserverGeometry",
+        "type": "object"
+      },
+      "SatelliteState": {
+        "properties": {
+          "norad_id": {
+            "title": "Norad Id",
+            "type": "integer"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "timestamp": {
+            "description": "UTC ISO-8601",
+            "title": "Timestamp",
+            "type": "string"
+          },
+          "r_teme_km": {
+            "description": "Position TEME [km]",
+            "maxItems": 3,
+            "minItems": 3,
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "title": "R Teme Km",
+            "type": "array"
+          },
+          "v_teme_km_s": {
+            "description": "Velocity TEME [km/s]",
+            "maxItems": 3,
+            "minItems": 3,
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "title": "V Teme Km S",
+            "type": "array"
+          },
+          "r_itrs_km": {
+            "description": "Position ITRS [km]",
+            "maxItems": 3,
+            "minItems": 3,
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "title": "R Itrs Km",
+            "type": "array"
+          },
+          "v_itrs_km_s": {
+            "description": "Velocity ITRS [km/s]",
+            "maxItems": 3,
+            "minItems": 3,
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "title": "V Itrs Km S",
+            "type": "array"
+          },
+          "latitude_deg": {
+            "description": "Geodetic latitude [deg]",
+            "title": "Latitude Deg",
+            "type": "number"
+          },
+          "longitude_deg": {
+            "description": "Geodetic longitude [deg]",
+            "title": "Longitude Deg",
+            "type": "number"
+          },
+          "altitude_km": {
+            "description": "Geodetic altitude [km]",
+            "title": "Altitude Km",
+            "type": "number"
+          },
+          "velocity_km_s": {
+            "description": "Speed in ITRS [km/s]",
+            "title": "Velocity Km S",
+            "type": "number"
+          },
+          "eclipse_state": {
+            "description": "sunlit | penumbra | umbra",
+            "title": "Eclipse State",
+            "type": "string"
+          },
+          "shadow_function": {
+            "description": "1=sunlit, 0=umbra [-]",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Shadow Function",
+            "type": "number"
+          }
+        },
+        "required": [
+          "norad_id",
+          "name",
+          "timestamp",
+          "r_teme_km",
+          "v_teme_km_s",
+          "r_itrs_km",
+          "v_itrs_km_s",
+          "latitude_deg",
+          "longitude_deg",
+          "altitude_km",
+          "velocity_km_s",
+          "eclipse_state",
+          "shadow_function"
+        ],
+        "title": "SatelliteState",
+        "type": "object"
+      }
+    },
+    "properties": {
+      "timestamp": {
+        "title": "Timestamp",
+        "type": "string"
+      },
+      "tick_id": {
+        "title": "Tick Id",
+        "type": "integer"
+      },
+      "satellite": {
+        "$ref": "#/$defs/SatelliteState"
+      },
+      "observer": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/ObserverGeometry"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "degraded_iers": {
+        "default": false,
+        "title": "Degraded Iers",
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "timestamp",
+      "tick_id",
+      "satellite"
+    ],
+    "title": "TelemetryFrame",
+    "type": "object"
+  },
+  "GlobalFrame": {
+    "$defs": {
+      "SatelliteState": {
+        "properties": {
+          "norad_id": {
+            "title": "Norad Id",
+            "type": "integer"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "timestamp": {
+            "description": "UTC ISO-8601",
+            "title": "Timestamp",
+            "type": "string"
+          },
+          "r_teme_km": {
+            "description": "Position TEME [km]",
+            "maxItems": 3,
+            "minItems": 3,
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "title": "R Teme Km",
+            "type": "array"
+          },
+          "v_teme_km_s": {
+            "description": "Velocity TEME [km/s]",
+            "maxItems": 3,
+            "minItems": 3,
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "title": "V Teme Km S",
+            "type": "array"
+          },
+          "r_itrs_km": {
+            "description": "Position ITRS [km]",
+            "maxItems": 3,
+            "minItems": 3,
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "title": "R Itrs Km",
+            "type": "array"
+          },
+          "v_itrs_km_s": {
+            "description": "Velocity ITRS [km/s]",
+            "maxItems": 3,
+            "minItems": 3,
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "title": "V Itrs Km S",
+            "type": "array"
+          },
+          "latitude_deg": {
+            "description": "Geodetic latitude [deg]",
+            "title": "Latitude Deg",
+            "type": "number"
+          },
+          "longitude_deg": {
+            "description": "Geodetic longitude [deg]",
+            "title": "Longitude Deg",
+            "type": "number"
+          },
+          "altitude_km": {
+            "description": "Geodetic altitude [km]",
+            "title": "Altitude Km",
+            "type": "number"
+          },
+          "velocity_km_s": {
+            "description": "Speed in ITRS [km/s]",
+            "title": "Velocity Km S",
+            "type": "number"
+          },
+          "eclipse_state": {
+            "description": "sunlit | penumbra | umbra",
+            "title": "Eclipse State",
+            "type": "string"
+          },
+          "shadow_function": {
+            "description": "1=sunlit, 0=umbra [-]",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Shadow Function",
+            "type": "number"
+          }
+        },
+        "required": [
+          "norad_id",
+          "name",
+          "timestamp",
+          "r_teme_km",
+          "v_teme_km_s",
+          "r_itrs_km",
+          "v_itrs_km_s",
+          "latitude_deg",
+          "longitude_deg",
+          "altitude_km",
+          "velocity_km_s",
+          "eclipse_state",
+          "shadow_function"
+        ],
+        "title": "SatelliteState",
+        "type": "object"
+      }
+    },
+    "properties": {
+      "timestamp": {
+        "title": "Timestamp",
+        "type": "string"
+      },
+      "tick_id": {
+        "title": "Tick Id",
+        "type": "integer"
+      },
+      "satellites": {
+        "items": {
+          "$ref": "#/$defs/SatelliteState"
+        },
+        "title": "Satellites",
+        "type": "array"
+      },
+      "degraded_iers": {
+        "default": false,
+        "title": "Degraded Iers",
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "timestamp",
+      "tick_id",
+      "satellites"
+    ],
+    "title": "GlobalFrame",
+    "type": "object"
+  },
+  "HealthResponse": {
+    "properties": {
+      "status": {
+        "title": "Status",
+        "type": "string"
+      },
+      "redis_ok": {
+        "title": "Redis Ok",
+        "type": "boolean"
+      },
+      "ticker_ok": {
+        "title": "Ticker Ok",
+        "type": "boolean"
+      },
+      "ticker_age_s": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Ticker Age S"
+      },
+      "satellite_count": {
+        "title": "Satellite Count",
+        "type": "integer"
+      },
+      "degraded_iers": {
+        "title": "Degraded Iers",
+        "type": "boolean"
+      },
+      "version": {
+        "default": "2.0.0",
+        "title": "Version",
+        "type": "string"
+      }
+    },
+    "required": [
+      "status",
+      "redis_ok",
+      "ticker_ok",
+      "ticker_age_s",
+      "satellite_count",
+      "degraded_iers"
+    ],
+    "title": "HealthResponse",
+    "type": "object"
+  },
+  "CatalogResponse": {
+    "$defs": {
+      "CatalogItem": {
+        "properties": {
+          "norad_id": {
+            "title": "Norad Id",
+            "type": "integer"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "epoch_iso": {
+            "title": "Epoch Iso",
+            "type": "string"
+          },
+          "epoch_age_h": {
+            "title": "Epoch Age H",
+            "type": "number"
+          },
+          "stale_warning": {
+            "title": "Stale Warning",
+            "type": "boolean"
+          },
+          "bstar": {
+            "description": "B* [1/earth radii]",
+            "title": "Bstar",
+            "type": "number"
+          },
+          "bstar_trend": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Linear fit slope of B* vs epoch [1/earth radii / day]",
+            "title": "Bstar Trend"
+          },
+          "inclination_deg": {
+            "title": "Inclination Deg",
+            "type": "number"
+          },
+          "eccentricity": {
+            "title": "Eccentricity",
+            "type": "number"
+          },
+          "mean_motion_rev_per_day": {
+            "title": "Mean Motion Rev Per Day",
+            "type": "number"
+          }
+        },
+        "required": [
+          "norad_id",
+          "name",
+          "epoch_iso",
+          "epoch_age_h",
+          "stale_warning",
+          "bstar",
+          "inclination_deg",
+          "eccentricity",
+          "mean_motion_rev_per_day"
+        ],
+        "title": "CatalogItem",
+        "type": "object"
+      }
+    },
+    "properties": {
+      "satellites": {
+        "items": {
+          "$ref": "#/$defs/CatalogItem"
+        },
+        "title": "Satellites",
+        "type": "array"
+      },
+      "source": {
+        "default": "celestrak",
+        "title": "Source",
+        "type": "string"
+      }
+    },
+    "required": [
+      "satellites"
+    ],
+    "title": "CatalogResponse",
+    "type": "object"
+  },
+  "PassResponse": {
+    "$defs": {
+      "PassCurvePoint": {
+        "properties": {
+          "timestamp": {
+            "title": "Timestamp",
+            "type": "string"
+          },
+          "azimuth_deg": {
+            "title": "Azimuth Deg",
+            "type": "number"
+          },
+          "elevation_deg": {
+            "title": "Elevation Deg",
+            "type": "number"
+          },
+          "elevation_apparent_deg": {
+            "title": "Elevation Apparent Deg",
+            "type": "number"
+          },
+          "slant_range_km": {
+            "title": "Slant Range Km",
+            "type": "number"
+          },
+          "range_rate_km_s": {
+            "title": "Range Rate Km S",
+            "type": "number"
+          },
+          "doppler_hz": {
+            "title": "Doppler Hz",
+            "type": "number"
+          },
+          "doppler_drift_hz_s": {
+            "title": "Doppler Drift Hz S",
+            "type": "number"
+          },
+          "fspl_db": {
+            "title": "Fspl Db",
+            "type": "number"
+          },
+          "rx_freq_hz": {
+            "title": "Rx Freq Hz",
+            "type": "number"
+          }
+        },
+        "required": [
+          "timestamp",
+          "azimuth_deg",
+          "elevation_deg",
+          "elevation_apparent_deg",
+          "slant_range_km",
+          "range_rate_km_s",
+          "doppler_hz",
+          "doppler_drift_hz_s",
+          "fspl_db",
+          "rx_freq_hz"
+        ],
+        "title": "PassCurvePoint",
+        "type": "object"
+      },
+      "PassEvent": {
+        "properties": {
+          "aos": {
+            "title": "Aos",
+            "type": "string"
+          },
+          "tca": {
+            "title": "Tca",
+            "type": "string"
+          },
+          "los": {
+            "title": "Los",
+            "type": "string"
+          },
+          "max_elevation_deg": {
+            "title": "Max Elevation Deg",
+            "type": "number"
+          },
+          "aos_azimuth_deg": {
+            "title": "Aos Azimuth Deg",
+            "type": "number"
+          },
+          "los_azimuth_deg": {
+            "title": "Los Azimuth Deg",
+            "type": "number"
+          },
+          "tca_azimuth_deg": {
+            "title": "Tca Azimuth Deg",
+            "type": "number"
+          },
+          "max_doppler_hz": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Max Doppler Hz"
+          },
+          "min_fspl_db": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Min Fspl Db"
+          }
+        },
+        "required": [
+          "aos",
+          "tca",
+          "los",
+          "max_elevation_deg",
+          "aos_azimuth_deg",
+          "los_azimuth_deg",
+          "tca_azimuth_deg"
+        ],
+        "title": "PassEvent",
+        "type": "object"
+      }
+    },
+    "properties": {
+      "norad_id": {
+        "title": "Norad Id",
+        "type": "integer"
+      },
+      "passes": {
+        "items": {
+          "$ref": "#/$defs/PassEvent"
+        },
+        "title": "Passes",
+        "type": "array"
+      },
+      "next_pass_curve": {
+        "items": {
+          "$ref": "#/$defs/PassCurvePoint"
+        },
+        "title": "Next Pass Curve",
+        "type": "array"
+      }
+    },
+    "required": [
+      "norad_id",
+      "passes",
+      "next_pass_curve"
+    ],
+    "title": "PassResponse",
+    "type": "object"
+  },
+  "SatelliteTrackResponse": {
+    "$defs": {
+      "TrackPoint": {
+        "properties": {
+          "timestamp": {
+            "title": "Timestamp",
+            "type": "string"
+          },
+          "latitude_deg": {
+            "title": "Latitude Deg",
+            "type": "number"
+          },
+          "longitude_deg": {
+            "title": "Longitude Deg",
+            "type": "number"
+          },
+          "altitude_km": {
+            "title": "Altitude Km",
+            "type": "number"
+          },
+          "r_itrs_km": {
+            "anyOf": [
+              {
+                "maxItems": 3,
+                "minItems": 3,
+                "prefixItems": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ],
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "R Itrs Km"
+          },
+          "v_itrs_km_s": {
+            "anyOf": [
+              {
+                "maxItems": 3,
+                "minItems": 3,
+                "prefixItems": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ],
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "V Itrs Km S"
+          }
+        },
+        "required": [
+          "timestamp",
+          "latitude_deg",
+          "longitude_deg",
+          "altitude_km"
+        ],
+        "title": "TrackPoint",
+        "type": "object"
+      }
+    },
+    "properties": {
+      "norad_id": {
+        "title": "Norad Id",
+        "type": "integer"
+      },
+      "name": {
+        "title": "Name",
+        "type": "string"
+      },
+      "footprint_radius_km": {
+        "title": "Footprint Radius Km",
+        "type": "number"
+      },
+      "past_track": {
+        "items": {
+          "$ref": "#/$defs/TrackPoint"
+        },
+        "title": "Past Track",
+        "type": "array"
+      },
+      "future_track": {
+        "items": {
+          "$ref": "#/$defs/TrackPoint"
+        },
+        "title": "Future Track",
+        "type": "array"
+      },
+      "epoch_iso": {
+        "title": "Epoch Iso",
+        "type": "string"
+      },
+      "epoch_age_h": {
+        "title": "Epoch Age H",
+        "type": "number"
+      },
+      "stale_warning": {
+        "title": "Stale Warning",
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "norad_id",
+      "name",
+      "footprint_radius_km",
+      "past_track",
+      "future_track",
+      "epoch_iso",
+      "epoch_age_h",
+      "stale_warning"
+    ],
+    "title": "SatelliteTrackResponse",
+    "type": "object"
+  },
+  "EclipseResponse": {
+    "$defs": {
+      "EclipseEvent": {
+        "properties": {
+          "entry": {
+            "description": "UTC ISO-8601 entry into penumbra/umbra",
+            "title": "Entry",
+            "type": "string"
+          },
+          "exit": {
+            "description": "UTC ISO-8601 exit",
+            "title": "Exit",
+            "type": "string"
+          },
+          "kind": {
+            "description": "penumbra | umbra",
+            "title": "Kind",
+            "type": "string"
+          },
+          "duration_s": {
+            "description": "Duration [s]",
+            "title": "Duration S",
+            "type": "number"
+          }
+        },
+        "required": [
+          "entry",
+          "exit",
+          "kind",
+          "duration_s"
+        ],
+        "title": "EclipseEvent",
+        "type": "object"
+      }
+    },
+    "properties": {
+      "norad_id": {
+        "title": "Norad Id",
+        "type": "integer"
+      },
+      "window_start": {
+        "title": "Window Start",
+        "type": "string"
+      },
+      "window_end": {
+        "title": "Window End",
+        "type": "string"
+      },
+      "events": {
+        "items": {
+          "$ref": "#/$defs/EclipseEvent"
+        },
+        "title": "Events",
+        "type": "array"
+      }
+    },
+    "required": [
+      "norad_id",
+      "window_start",
+      "window_end",
+      "events"
+    ],
+    "title": "EclipseResponse",
+    "type": "object"
+  },
+  "ConjunctionResponse": {
+    "$defs": {
+      "ConjunctionAlert": {
+        "properties": {
+          "primary_norad": {
+            "title": "Primary Norad",
+            "type": "integer"
+          },
+          "secondary_norad": {
+            "title": "Secondary Norad",
+            "type": "integer"
+          },
+          "tca": {
+            "description": "Time of closest approach UTC ISO-8601",
+            "title": "Tca",
+            "type": "string"
+          },
+          "miss_distance_km": {
+            "description": "Relative miss distance at TCA [km]",
+            "title": "Miss Distance Km",
+            "type": "number"
+          },
+          "relative_speed_km_s": {
+            "description": "Relative speed at TCA [km/s]",
+            "title": "Relative Speed Km S",
+            "type": "number"
+          },
+          "screening_radius_km": {
+            "description": "Bounding-sphere threshold [km]",
+            "title": "Screening Radius Km",
+            "type": "number"
+          }
+        },
+        "required": [
+          "primary_norad",
+          "secondary_norad",
+          "tca",
+          "miss_distance_km",
+          "relative_speed_km_s",
+          "screening_radius_km"
+        ],
+        "title": "ConjunctionAlert",
+        "type": "object"
+      }
+    },
+    "properties": {
+      "window_start": {
+        "title": "Window Start",
+        "type": "string"
+      },
+      "window_end": {
+        "title": "Window End",
+        "type": "string"
+      },
+      "alerts": {
+        "items": {
+          "$ref": "#/$defs/ConjunctionAlert"
+        },
+        "title": "Alerts",
+        "type": "array"
+      }
+    },
+    "required": [
+      "window_start",
+      "window_end",
+      "alerts"
+    ],
+    "title": "ConjunctionResponse",
+    "type": "object"
+  },
+  "AttitudeSimResponse": {
+    "$defs": {
+      "AttitudeSample": {
+        "properties": {
+          "t_s": {
+            "description": "Simulation time [s]",
+            "title": "T S",
+            "type": "number"
+          },
+          "q_body_inertial": {
+            "description": "Quaternion (w,x,y,z) body\u2190inertial [-]",
+            "maxItems": 4,
+            "minItems": 4,
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "title": "Q Body Inertial",
+            "type": "array"
+          },
+          "omega_body_rad_s": {
+            "description": "Body rates [rad/s]",
+            "maxItems": 3,
+            "minItems": 3,
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "title": "Omega Body Rad S",
+            "type": "array"
+          },
+          "solar_power_w": {
+            "description": "Instantaneous array power [W]",
+            "title": "Solar Power W",
+            "type": "number"
+          },
+          "polarization_loss_db": {
+            "description": "Polarization mismatch loss [dB]",
+            "title": "Polarization Loss Db",
+            "type": "number"
+          }
+        },
+        "required": [
+          "t_s",
+          "q_body_inertial",
+          "omega_body_rad_s",
+          "solar_power_w",
+          "polarization_loss_db"
+        ],
+        "title": "AttitudeSample",
+        "type": "object"
+      }
+    },
+    "properties": {
+      "samples": {
+        "items": {
+          "$ref": "#/$defs/AttitudeSample"
+        },
+        "title": "Samples",
+        "type": "array"
+      },
+      "conserved_angular_momentum_err": {
+        "description": "Relative |H| drift over integration [-]",
+        "title": "Conserved Angular Momentum Err",
+        "type": "number"
+      }
+    },
+    "required": [
+      "samples",
+      "conserved_angular_momentum_err"
+    ],
+    "title": "AttitudeSimResponse",
+    "type": "object"
+  }
+}

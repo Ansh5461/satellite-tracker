@@ -1,0 +1,171 @@
+{
+  "$defs": {
+    "SatelliteState": {
+      "properties": {
+        "norad_id": {
+          "title": "Norad Id",
+          "type": "integer"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "timestamp": {
+          "description": "UTC ISO-8601",
+          "title": "Timestamp",
+          "type": "string"
+        },
+        "r_teme_km": {
+          "description": "Position TEME [km]",
+          "maxItems": 3,
+          "minItems": 3,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "R Teme Km",
+          "type": "array"
+        },
+        "v_teme_km_s": {
+          "description": "Velocity TEME [km/s]",
+          "maxItems": 3,
+          "minItems": 3,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "V Teme Km S",
+          "type": "array"
+        },
+        "r_itrs_km": {
+          "description": "Position ITRS [km]",
+          "maxItems": 3,
+          "minItems": 3,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "R Itrs Km",
+          "type": "array"
+        },
+        "v_itrs_km_s": {
+          "description": "Velocity ITRS [km/s]",
+          "maxItems": 3,
+          "minItems": 3,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "V Itrs Km S",
+          "type": "array"
+        },
+        "latitude_deg": {
+          "description": "Geodetic latitude [deg]",
+          "title": "Latitude Deg",
+          "type": "number"
+        },
+        "longitude_deg": {
+          "description": "Geodetic longitude [deg]",
+          "title": "Longitude Deg",
+          "type": "number"
+        },
+        "altitude_km": {
+          "description": "Geodetic altitude [km]",
+          "title": "Altitude Km",
+          "type": "number"
+        },
+        "velocity_km_s": {
+          "description": "Speed in ITRS [km/s]",
+          "title": "Velocity Km S",
+          "type": "number"
+        },
+        "eclipse_state": {
+          "description": "sunlit | penumbra | umbra",
+          "title": "Eclipse State",
+          "type": "string"
+        },
+        "shadow_function": {
+          "description": "1=sunlit, 0=umbra [-]",
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Shadow Function",
+          "type": "number"
+        }
+      },
+      "required": [
+        "norad_id",
+        "name",
+        "timestamp",
+        "r_teme_km",
+        "v_teme_km_s",
+        "r_itrs_km",
+        "v_itrs_km_s",
+        "latitude_deg",
+        "longitude_deg",
+        "altitude_km",
+        "velocity_km_s",
+        "eclipse_state",
+        "shadow_function"
+      ],
+      "title": "SatelliteState",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "timestamp": {
+      "title": "Timestamp",
+      "type": "string"
+    },
+    "tick_id": {
+      "title": "Tick Id",
+      "type": "integer"
+    },
+    "satellites": {
+      "items": {
+        "$ref": "#/$defs/SatelliteState"
+      },
+      "title": "Satellites",
+      "type": "array"
+    },
+    "degraded_iers": {
+      "default": false,
+      "title": "Degraded Iers",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "timestamp",
+    "tick_id",
+    "satellites"
+  ],
+  "title": "GlobalFrame",
+  "type": "object"
+}

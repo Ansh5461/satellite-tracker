@@ -1,0 +1,70 @@
+{
+  "$defs": {
+    "ConjunctionAlert": {
+      "properties": {
+        "primary_norad": {
+          "title": "Primary Norad",
+          "type": "integer"
+        },
+        "secondary_norad": {
+          "title": "Secondary Norad",
+          "type": "integer"
+        },
+        "tca": {
+          "description": "Time of closest approach UTC ISO-8601",
+          "title": "Tca",
+          "type": "string"
+        },
+        "miss_distance_km": {
+          "description": "Relative miss distance at TCA [km]",
+          "title": "Miss Distance Km",
+          "type": "number"
+        },
+        "relative_speed_km_s": {
+          "description": "Relative speed at TCA [km/s]",
+          "title": "Relative Speed Km S",
+          "type": "number"
+        },
+        "screening_radius_km": {
+          "description": "Bounding-sphere threshold [km]",
+          "title": "Screening Radius Km",
+          "type": "number"
+        }
+      },
+      "required": [
+        "primary_norad",
+        "secondary_norad",
+        "tca",
+        "miss_distance_km",
+        "relative_speed_km_s",
+        "screening_radius_km"
+      ],
+      "title": "ConjunctionAlert",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "window_start": {
+      "title": "Window Start",
+      "type": "string"
+    },
+    "window_end": {
+      "title": "Window End",
+      "type": "string"
+    },
+    "alerts": {
+      "items": {
+        "$ref": "#/$defs/ConjunctionAlert"
+      },
+      "title": "Alerts",
+      "type": "array"
+    }
+  },
+  "required": [
+    "window_start",
+    "window_end",
+    "alerts"
+  ],
+  "title": "ConjunctionResponse",
+  "type": "object"
+}

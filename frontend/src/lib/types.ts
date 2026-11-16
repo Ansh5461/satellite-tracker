@@ -6,6 +6,9 @@ export interface SatelliteSummary {
 	altitude_km: number;
 	velocity_kms: number;
 	period_min: number;
+	epoch_age_h?: number;
+	stale_warning?: boolean;
+	bstar?: number;
 }
 
 export interface TrackPoint {
@@ -13,6 +16,8 @@ export interface TrackPoint {
 	latitude: number;
 	longitude: number;
 	altitude_km: number;
+	r_itrs_km?: [number, number, number];
+	v_itrs_km_s?: [number, number, number];
 }
 
 export interface SatelliteTrackResponse {
@@ -27,6 +32,8 @@ export interface SatelliteTrackResponse {
 	footprint_radius_km: number;
 	past_track: TrackPoint[];
 	future_track: TrackPoint[];
+	epoch_age_h?: number;
+	stale_warning?: boolean;
 }
 
 export interface PassEvent {
@@ -37,6 +44,8 @@ export interface PassEvent {
 	aos_azimuth_deg: number;
 	los_azimuth_deg: number;
 	tca_azimuth_deg: number;
+	max_doppler_hz?: number | null;
+	min_fspl_db?: number | null;
 }
 
 export interface PassCurvePoint {
@@ -47,6 +56,9 @@ export interface PassCurvePoint {
 	range_rate_km_s: number;
 	doppler_hz: number;
 	rx_freq_mhz: number;
+	fspl_db?: number;
+	doppler_drift_hz_s?: number;
+	elevation_apparent_deg?: number;
 }
 
 export interface PassResponse {
@@ -67,6 +79,8 @@ export interface TelemetryMessage {
 	range_rate_km_s?: number;
 	doppler_hz?: number;
 	rx_freq_mhz?: number;
+	eclipse_state?: string;
+	fspl_db?: number;
 }
 
 export interface GroundStation {

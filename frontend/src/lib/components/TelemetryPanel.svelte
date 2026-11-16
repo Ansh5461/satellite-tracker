@@ -33,7 +33,9 @@
 		<span class="text-xs uppercase tracking-widest text-mission-muted">Live telemetry</span>
 	</div>
 	{#if !telemetry}
-		<p class="text-mission-muted text-xs">Awaiting WebSocket…</p>
+		<p class="text-mission-muted text-xs">
+			{connected ? 'Connected — waiting for ticker frames…' : 'Awaiting WebSocket…'}
+		</p>
 	{:else}
 		<dl class="grid grid-cols-2 gap-x-3 gap-y-1 tabular-nums">
 			{#each rows as row}

@@ -1,21 +1,53 @@
 services:
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--save", "", "--appendonly", "no", "--maxmemory-policy", "allkeys-lru"]
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
   backend:
     build:
-      context: .
+      context: ./backend
       dockerfile: Dockerfile
-      target: backend
     ports:
       - "8000:8000"
-    volumes:
-      - ./backend/data:/app/backend/data
     environment:
+      - REDIS_URL=redis://redis:6379/0
       - TLE_CACHE_TTL_SECONDS=7200
+      - OMM_FRESH_SECONDS=7200
+      - IERS_AUTO_DOWNLOAD=false
+    volumes:
+      - ./backend/data:/app/data
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  ticker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: ["python", "-m", "app.streaming.ticker"]
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - TICK_HZ=1.0
+      - IERS_AUTO_DOWNLOAD=false
+    volumes:
+      - ./backend/data:/app/data
+    depends_on:
+      redis:
+        condition: service_healthy
+      backend:
+        condition: service_started
 
   frontend:
     build:
-      context: .
+      context: ./frontend
       dockerfile: Dockerfile
-      target: frontend
       args:
         PUBLIC_API_URL: http://localhost:8000
     ports:

@@ -1,0 +1,65 @@
+{
+  "$defs": {
+    "EclipseEvent": {
+      "properties": {
+        "entry": {
+          "description": "UTC ISO-8601 entry into penumbra/umbra",
+          "title": "Entry",
+          "type": "string"
+        },
+        "exit": {
+          "description": "UTC ISO-8601 exit",
+          "title": "Exit",
+          "type": "string"
+        },
+        "kind": {
+          "description": "penumbra | umbra",
+          "title": "Kind",
+          "type": "string"
+        },
+        "duration_s": {
+          "description": "Duration [s]",
+          "title": "Duration S",
+          "type": "number"
+        }
+      },
+      "required": [
+        "entry",
+        "exit",
+        "kind",
+        "duration_s"
+      ],
+      "title": "EclipseEvent",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "norad_id": {
+      "title": "Norad Id",
+      "type": "integer"
+    },
+    "window_start": {
+      "title": "Window Start",
+      "type": "string"
+    },
+    "window_end": {
+      "title": "Window End",
+      "type": "string"
+    },
+    "events": {
+      "items": {
+        "$ref": "#/$defs/EclipseEvent"
+      },
+      "title": "Events",
+      "type": "array"
+    }
+  },
+  "required": [
+    "norad_id",
+    "window_start",
+    "window_end",
+    "events"
+  ],
+  "title": "EclipseResponse",
+  "type": "object"
+}

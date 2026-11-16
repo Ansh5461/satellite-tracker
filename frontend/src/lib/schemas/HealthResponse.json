@@ -1,0 +1,50 @@
+{
+  "properties": {
+    "status": {
+      "title": "Status",
+      "type": "string"
+    },
+    "redis_ok": {
+      "title": "Redis Ok",
+      "type": "boolean"
+    },
+    "ticker_ok": {
+      "title": "Ticker Ok",
+      "type": "boolean"
+    },
+    "ticker_age_s": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Ticker Age S"
+    },
+    "satellite_count": {
+      "title": "Satellite Count",
+      "type": "integer"
+    },
+    "degraded_iers": {
+      "title": "Degraded Iers",
+      "type": "boolean"
+    },
+    "version": {
+      "default": "2.0.0",
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "status",
+    "redis_ok",
+    "ticker_ok",
+    "ticker_age_s",
+    "satellite_count",
+    "degraded_iers"
+  ],
+  "title": "HealthResponse",
+  "type": "object"
+}
