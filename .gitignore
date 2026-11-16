@@ -21,3 +21,8 @@ backend/data/eop_cache/
 *.log
 .idea/
 .vscode/
+.cursor/
+.agents/
+*.swp
+*.swo
+Thumbs.db
